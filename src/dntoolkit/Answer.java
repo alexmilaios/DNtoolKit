@@ -77,7 +77,6 @@ public class Answer extends JPanel {
 				String[] persistentPredicates = tmp.split(" "); 
 				
 				String[] transportPredicates = (JTreeMethods.visitSimpleTree2(kit.westPanel.tranTree,"transport")).split(" "); 
-				System.out.println(getDummyTrace(links));
 				
 				new Thread(new  ThreadedUniverse(levels,messages,(new Topology(new Layers(getDummyTrace(links)).messages)).getTopology(),
 						nodes.length,persistentPredicates,null,transportPredicates,trace2,nodes)).start();
