@@ -150,8 +150,10 @@ public class JTreeMethods {
 			StringTokenizer tokens = new StringTokenizer(node.toString(),"/");
 			String name = tokens.nextToken();
 			int args = Integer.parseInt(tokens.nextToken());
-			if(type.equals("transport"))
-				result  = "\n#show receive_" + name + "/"+ (args + 4)+ ".";
+			if(type.equals("transport")){
+				result = "\n#show receive_" + name + "/"+ (args + 4)+ ".";
+				result += "\n#show send_" + name + "/"+ (args + 3)+ ".";
+			}
 			else
 				result  = "\n#show "+ name + "/"+ (args + 2)+ ".";
 		}

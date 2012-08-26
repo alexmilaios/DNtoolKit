@@ -92,18 +92,24 @@ public class Analisys extends JMenuItem {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				runProcess();
-				answers = new ArrayList<Answer>();
-				answerPane.removeAll();
-				showAns.setText("");
-				try {
-					addAnswers();
-					if(setOutput()){
-						repaint();
+				new Thread(new Runnable() {
+					
+					@Override
+					public void run() {
+						runProcess();
+						answers = new ArrayList<Answer>();
+						answerPane.removeAll();
+						showAns.setText("");
+						try {
+							addAnswers();
+							if(setOutput()){
+								repaint();
+							}
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				}).start();
 			}
 		});
 	}
