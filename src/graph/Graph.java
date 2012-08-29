@@ -63,28 +63,7 @@ public class Graph {
 			
 			System.out.println("----------------");
 		}
-//
 		return sortedTS;
-//		// while S is non-empty do
-//
-//
-//
-//
-//		// // Check to see if all edges are removed
-//		// boolean cycle = false;
-//		// for (Node n : allNodes) {
-//		// if (!n.inEdges.isEmpty()) {
-//		// cycle = true;
-//		// break;
-//		// }
-//		// }
-//
-//		if (cycle) {
-//			System.out.println("Cycle present, topological sort not possible");
-//			return null;
-//		} else {
-//			return sortedTS;
-//		}
 	}
 
 }

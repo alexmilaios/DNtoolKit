@@ -604,10 +604,6 @@ public class DnToolKit extends JFrame {
 		JScrollPane consoleScroll = new JScrollPane(console);
 		downTap.add("cosole",consoleScroll);
 		
-/*		JPanel consolPanel = new JPanel();
-		consolPanel.setLayout(new BorderLayout(5,5));
-		consolPanel.add("North",new JLabel("Console"));
-		consolPanel.add("Center",consoleScroll);*/
 		centralPanel.add("South",downTap);
 
 		setVisible(true);

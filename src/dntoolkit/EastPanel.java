@@ -357,7 +357,7 @@ public class EastPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				String source =  (String) src.getSelectedItem();
 				String destination = (String) dest.getSelectedItem();
-				String value = "neighbor("+ source +"," + destination +")";
+				String value = "neighbour("+ source +"," + destination +")";
 
 				if(JTreeMethods.isMember(linkTree, value)){
 					console.setText("Enter twice the same link");

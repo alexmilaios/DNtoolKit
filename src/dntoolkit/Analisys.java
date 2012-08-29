@@ -23,6 +23,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.plaf.SliderUI;
 
 @SuppressWarnings("serial")
 public class Analisys extends JMenuItem {
@@ -51,7 +52,7 @@ public class Analisys extends JMenuItem {
 			String line = "";
 			while((line = reader.readLine()) != null || (line = error.readLine()) != null){
 				out.write("\n" + line);
-				kit.console.setText(line + "\n");
+				//kit.console.setText(line + "\n");
 				out.flush();
 			}
 			in.close();
@@ -80,8 +81,11 @@ public class Analisys extends JMenuItem {
 						trace += tokens2.nextToken() + "\n";
 					}
 					answers.add(new Answer(trace,kit,i));
-					answerPane.add(answers.get(i-1));
+					if(i < 5) {
+						answerPane.add(answers.get(i-1));
+					}
 					i++;
+					
 				}
 			}
 		}
@@ -92,8 +96,9 @@ public class Analisys extends JMenuItem {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				new Thread(new Runnable() {
-					
+
+				final Thread runprocess = new Thread(new Runnable() {
+
 					@Override
 					public void run() {
 						runProcess();
@@ -102,11 +107,32 @@ public class Analisys extends JMenuItem {
 						showAns.setText("");
 						try {
 							addAnswers();
-							if(setOutput()){
-								repaint();
-							}
 						} catch (Exception e) {
+							// TODO Auto-generated catch block
 							e.printStackTrace();
+						}
+					}
+				});
+				runprocess.start();
+
+				new Thread(new Runnable() {
+					@Override
+					public void run() {	
+						int i =0;
+						while(runprocess.isAlive()){
+								kit.console.setText("clingo is running");
+							try {
+								Thread.sleep(1000);
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+						if(setOutput()){
+							if(answers.size() > 6) {
+								kit.console.setText(kit.console.getText() + "\nThere number of answers: " + answers.size());
+							}
+							repaint();
 						}
 					}
 				}).start();
