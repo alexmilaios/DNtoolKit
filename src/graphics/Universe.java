@@ -3,11 +3,12 @@ package graphics;
 import graph.Connection;
 import graph.Node;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.File;
 import java.util.List;
 import java.util.Vector;
 
@@ -19,7 +20,10 @@ import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.awt.GLCanvas;
 import javax.media.opengl.glu.GLU;
+import javax.swing.BoxLayout;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 
 import sort.SenderReceiverPairs;
@@ -53,7 +57,7 @@ public class Universe extends JFrame implements KeyListener, MouseListener{
 	public Universe (List<List<Node>> levels, Vector<SenderReceiverPairs> messages, 
 				List<Connection> connections, int numOfNodes,String [] persistenPredicates, 
 				String [] transientPredicates, String [] transportPredicates,String trace, String [] nodes) {
-		setSize(700, 700);
+		setSize(870, 700);
 		setTitle("Visualization");
 		
 		model = new Model(levels.size(), numOfNodes, connections,levels,messages,persistenPredicates,
@@ -74,7 +78,30 @@ public class Universe extends JFrame implements KeyListener, MouseListener{
 		Animator animator = new Animator(canvas);
 		animator.start();
 		
-		getContentPane().add(canvas);
+		getContentPane().setLayout(new BorderLayout());
+		getContentPane().add("Center",canvas);
+		
+		JPanel label = new JPanel();
+		JLabel timeline = new JLabel(" Blue Lines: timeline ");
+		timeline.setForeground(Color.cyan);
+		JLabel msg = new JLabel(" Red Lines: messages ");
+		msg.setForeground(Color.red);
+		JLabel topo = new JLabel(" Green Lines: Topology ");
+		topo.setForeground(Color.green);
+		JLabel nodesLabel = new JLabel(" Yellow Spheres: Nodes ");
+		nodesLabel.setForeground(Color.yellow);
+		JLabel moments = new JLabel(" White Spheres: Time Moments ");
+		moments.setForeground(Color.white);
+		
+		label.setLayout(new BoxLayout(label, BoxLayout.X_AXIS));
+		label.add(timeline);
+		label.add(msg);
+		label.add(topo);
+		label.add(nodesLabel);
+		label.add(moments);
+		label.setBackground(Color.black);
+		
+		getContentPane().add("South",label);
 	}
 	
 	
@@ -116,6 +143,7 @@ public class Universe extends JFrame implements KeyListener, MouseListener{
 			// draw vertical lines corresponding to time-line 
 			gl.glColor3f(0.0f, 0.0f, 1.0f);
 			model.drawTimeLines(gl);
+			model.drawGeneralTimeLines(gl);
 			
 			// draw the exchange messages
 			gl.glColor3f(1.0f, 0.0f, 0.0f);
@@ -130,8 +158,6 @@ public class Universe extends JFrame implements KeyListener, MouseListener{
 
 		@Override
 		public void dispose(GLAutoDrawable arg0) {
-			// TODO Auto-generated method stub
-			
 		}
 
 		@Override
@@ -273,5 +299,10 @@ public class Universe extends JFrame implements KeyListener, MouseListener{
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public void dispose() {
+		setVisible(false);
+		super.dispose();
 	}
 }

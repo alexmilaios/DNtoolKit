@@ -7,21 +7,14 @@ import graphics.ThreadedUniverse;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.tree.TreeNode;
-
-import jogamp.nativewindow.NWJNILibLoader;
-
 import sort.Layers;
-import sort.LineReader;
 import sort.SenderReceiverPairs;
 
 @SuppressWarnings("serial")

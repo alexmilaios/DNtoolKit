@@ -3,7 +3,6 @@ package graphics;
 import graph.Connection;
 import graph.Node;
 
-import java.io.File;
 import java.util.List;
 import java.util.Vector;
 
@@ -44,6 +43,8 @@ public class ThreadedUniverse implements Runnable{
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.setVisible(true);
 		
+		while(frame.isVisible());
+		return;
 	}
 
 }

@@ -7,7 +7,6 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,7 +17,6 @@ import java.util.StringTokenizer;
 import javax.swing.BoxLayout;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -44,6 +42,8 @@ public class DnToolKit extends JFrame {
 	private static int numOfLowTabs = 0;
 
 	public String qurryClicked = null;
+	
+	public boolean manetFlag = false;
 	
 	/*
 	 * Main File
@@ -440,10 +440,17 @@ public class DnToolKit extends JFrame {
 					myParser.ReInit(in);
 					Rule rule;
 					while((rule = myParser.rule())!=null){
+						boolean flag = false;
+						if(manetFlag && rule instanceof Transport)
+							flag = true;
 						StringTokenizer tokens = new StringTokenizer(rule.evaluate(),".");
-						while(tokens.hasMoreTokens()){
-							String tmp = tokens.nextToken();
-							out.write(tmp+".\n\n");
+						while(tokens.hasMoreTokens()) {
+							if(flag){
+								tokens.nextToken();
+								tokens.nextToken();
+								flag=false;
+							}
+							out.write(tokens.nextToken()+".\n\n");
 							out.flush();
 						}
 					}
@@ -492,6 +499,11 @@ public class DnToolKit extends JFrame {
 						myParser.ReInit(new ByteArrayInputStream(line.getBytes()));
 						try {
 							Transport transport = (Transport) myParser.rule();
+							
+							if(transport.head.name.evaluate().equals("rrep") || 
+									transport.head.name.evaluate().equals("rreq"))
+								manetFlag = true;
+							
 							westPanel.namePredicate.setText(transport.head.name.evaluate());
 							westPanel.arrity.setText(transport.head.terms.size()+"");
 							westPanel.addTran.doClick();

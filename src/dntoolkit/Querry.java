@@ -17,8 +17,6 @@ public class Querry extends JMenu {
 
 	protected DnToolKit kit;
 
-	private EastPanel east; 
-
 	public Querry same;
 
 	public String definedQuerry = "";
@@ -240,7 +238,6 @@ public class Querry extends JMenu {
 	public Querry (String name,DnToolKit kit,EastPanel east){
 		super(name);
 		this.kit = kit;
-		this.east = east;
 		same = this;
 		convergent.add(corAlways);
 		convergent.add(corSomeTimes);

@@ -11,12 +11,10 @@ import javax.swing.text.Position;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
-import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
-import parser.Token;
-
+@SuppressWarnings("rawtypes")
 public class JTreeMethods {
 
 	
@@ -220,11 +218,8 @@ public class JTreeMethods {
 	}
 
 	private static void deleteLinks(TreeNode node,int index, String target,JTree tree,List<TreePath> paths) {
-		String result = "";
 		if(index != 0) {
 			StringTokenizer tokens = new StringTokenizer(node.toString(),"(");
-			int lenght = tokens.countTokens();
-			result = tokens.nextToken(); 
 			StringTokenizer tokens2 = new StringTokenizer(tokens.nextToken(),",");
 			String src = tokens2.nextToken();
 			String dest = tokens2.nextToken();

@@ -1,14 +1,11 @@
 package dntoolkit;
 
 import java.awt.FlowLayout;
-import java.awt.ScrollPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
-import java.io.Console;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -17,13 +14,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.plaf.SliderUI;
 
 @SuppressWarnings("serial")
 public class Analisys extends JMenuItem {
@@ -33,6 +30,11 @@ public class Analisys extends JMenuItem {
 	public JPanel answerPane = new JPanel();
 	public JTextArea showAns = new JTextArea(5,30);
 	public JPanel general = new JPanel();
+	public JPanel auxpane = new JPanel();
+	public JComboBox answersMenu = new JComboBox();
+	public JButton show = new JButton("show");
+	public JButton viz = new JButton("visualise");
+
 
 	File trace = new File("dn_files/trace.txt");
 	List<Answer> answers;
@@ -41,8 +43,8 @@ public class Analisys extends JMenuItem {
 		OutputStreamWriter out;
 		try{
 			out = new OutputStreamWriter(new FileOutputStream(trace));
-			Process proc = Runtime.getRuntime().exec("./clingo 0 " + kit.com_model +  " dn_files/output.lp "
-					+ " dn_files/configuration.lp  dn_files/querry.lp");
+			Process proc = Runtime.getRuntime().exec("./clingo 0 " + kit.com_model +  " dn_files/output.lp "+
+					((kit.manetFlag) ? " dn_files/manet_injection.lp ":"")+ " dn_files/configuration.lp  dn_files/querry.lp");
 			InputStream in = proc.getInputStream();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 			InputStream err = proc.getErrorStream();
@@ -57,7 +59,7 @@ public class Analisys extends JMenuItem {
 			}
 			in.close();
 			out.close();
-			kit.console.setText("");
+			kit.console.setText(error.readLine());
 			proc.destroy();
 		}catch(Exception e) {
 			kit.console.setText(e.getMessage());
@@ -81,11 +83,9 @@ public class Analisys extends JMenuItem {
 						trace += tokens2.nextToken() + "\n";
 					}
 					answers.add(new Answer(trace,kit,i));
-					if(i < 5) {
-						answerPane.add(answers.get(i-1));
-					}
+					answersMenu.addItem("Answer: " +i);
 					i++;
-					
+
 				}
 			}
 		}
@@ -103,7 +103,7 @@ public class Analisys extends JMenuItem {
 					public void run() {
 						runProcess();
 						answers = new ArrayList<Answer>();
-						answerPane.removeAll();
+						answersMenu.removeAllItems();
 						showAns.setText("");
 						try {
 							addAnswers();
@@ -118,9 +118,8 @@ public class Analisys extends JMenuItem {
 				new Thread(new Runnable() {
 					@Override
 					public void run() {	
-						int i =0;
 						while(runprocess.isAlive()){
-								kit.console.setText("clingo is running");
+							kit.console.setText("clingo is running");
 							try {
 								Thread.sleep(1000);
 							} catch (InterruptedException e) {
@@ -129,13 +128,31 @@ public class Analisys extends JMenuItem {
 							}
 						}
 						if(setOutput()){
-							if(answers.size() > 6) {
-								kit.console.setText(kit.console.getText() + "\nThere number of answers: " + answers.size());
-							}
+							kit.console.setText(kit.console.getText() + "\nThere number of answers: " + answers.size());
 							repaint();
 						}
 					}
 				}).start();
+			}
+		});
+
+		show.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				String [] options = ((String) answersMenu.getSelectedItem()).split(" ");
+				Answer ans = answers.get(Integer.parseInt(options[1])-1);
+				ans.show.doClick();
+			}
+		});
+
+		viz.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				String [] options = ((String) answersMenu.getSelectedItem()).split(" ");
+				Answer ans = answers.get(Integer.parseInt(options[1])-1);
+				ans.vis.doClick();
 			}
 		});
 	}
@@ -167,7 +184,14 @@ public class Analisys extends JMenuItem {
 		super("Analize");
 		this.kit = kit;
 		this.addListener();
-		answerPane.setLayout(new BoxLayout(answerPane,BoxLayout.Y_AXIS));
+		answerPane.setLayout(new BoxLayout(answerPane,BoxLayout.X_AXIS));
+		auxpane.setLayout(new FlowLayout());
+		auxpane.add(answersMenu);
+		auxpane.add(show);
+		auxpane.add(viz);
+		answerPane.add(auxpane);
+		answerPane.add(show);
+		answerPane.add(viz);
 		general.setLayout(new BoxLayout(general, BoxLayout.X_AXIS));
 		general.add(new JScrollPane(answerPane));
 		showAns.setEditable(false);

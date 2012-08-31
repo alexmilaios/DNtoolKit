@@ -3,7 +3,6 @@ package graphics;
 import graph.Connection;
 import graph.Node;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -85,10 +84,14 @@ public class Model {
 		for(List<Vector3f> layer : layers) {
 			for(Vector3f point : layer) {
 				if(pointForDraw[i][j] || i== 0 ){
-					gl.glColor3f(1.0f,1.0f,1.0f);
+					if(i != 0)
+						gl.glColor3f(1.0f,1.0f,1.0f);
+					else
+						gl.glColor3f(1.0f, 1.0f, 0f);
+					
 					gl.glLoadIdentity();
 					gl.glTranslatef(point.x, point.y, point.z);
-					glu.gluSphere(quadric, 0.07, 8, 8);
+					glu.gluSphere(quadric,  (i==0) ? 0.11 : 0.07, 8, 8);
 				}else {
 					gl.glColor3f(0.4f,0.4f,0.4f);
 					gl.glLoadIdentity();
@@ -115,6 +118,28 @@ public class Model {
 		for(int i = 0; i < numOfNodes; i++) {
 			drawLine(gl,layers.get(0).get(i), layers.get(levels-1).get(i));
 		}
+	}
+	
+	public void drawGeneralTimeLines(GL2 gl) {
+		Vector3f start = new Vector3f(-10,layers.get(0).get(0).y+2,0);
+		Vector3f end = new Vector3f(-10,layers.get(levels-1).get(0).y-2,0);
+		drawLine(gl, start, end);
+		
+		gl.glMatrixMode(GL2.GL_MODELVIEW);
+		gl.glLoadIdentity();
+		gl.glTranslatef(-10, layers.get(levels-1).get(0).y-2, 0);
+		gl.glScalef(0.2f, 0.2f, 0.2f);
+		
+		gl.glBegin(GL.GL_TRIANGLE_FAN);
+		gl.glVertex3f(0, -1, 0);
+		gl.glVertex3f(1, 0, 0);
+		gl.glVertex3f(0, 0, -1);
+		gl.glVertex3f(-1, 0, 0);
+		gl.glVertex3f(0, 0, 1);
+		gl.glVertex3f(1, 0, 0);
+		gl.glEnd();
+		
+		gl.glLoadIdentity();
 	}
 	
 	public void drawMessages(GL2 gl) {

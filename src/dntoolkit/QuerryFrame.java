@@ -14,9 +14,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import parser.ParseException;
-import parser.Parser;
-import rules.Input;
 
 @SuppressWarnings("serial")
 public class QuerryFrame extends JFrame {
