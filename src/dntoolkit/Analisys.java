@@ -121,7 +121,7 @@ public class Analisys extends JMenuItem {
 						while(runprocess.isAlive()){
 							kit.console.setText("clingo is running");
 							try {
-								Thread.sleep(1000);
+								Thread.sleep(500);
 							} catch (InterruptedException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
@@ -142,7 +142,7 @@ public class Analisys extends JMenuItem {
 			public void actionPerformed(ActionEvent arg0) {
 				String [] options = ((String) answersMenu.getSelectedItem()).split(" ");
 				Answer ans = answers.get(Integer.parseInt(options[1])-1);
-				ans.show.doClick();
+				ans.show();
 			}
 		});
 
@@ -152,7 +152,7 @@ public class Analisys extends JMenuItem {
 			public void actionPerformed(ActionEvent arg0) {
 				String [] options = ((String) answersMenu.getSelectedItem()).split(" ");
 				Answer ans = answers.get(Integer.parseInt(options[1])-1);
-				ans.vis.doClick();
+				ans.visualize();
 			}
 		});
 	}

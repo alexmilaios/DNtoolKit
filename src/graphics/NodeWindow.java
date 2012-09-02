@@ -61,6 +61,7 @@ public class NodeWindow implements Runnable {
 	public void run() {
 		if(pointId.getTime() != -2)
 			new Window();
+
 	}
 
 	

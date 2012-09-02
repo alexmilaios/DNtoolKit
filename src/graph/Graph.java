@@ -60,8 +60,6 @@ public class Graph {
 			for (Node n : remainingNodes) {
 				System.out.print(n.toString() + ";");
 			}
-			
-			System.out.println("----------------");
 		}
 		return sortedTS;
 	}

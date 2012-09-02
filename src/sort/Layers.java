@@ -48,7 +48,6 @@ public class Layers {
 			}
 			
 			Graph graph = new Graph(array);
-			
 			layers = graph.topologicalSort();
 
 		} catch (FileNotFoundException e) {

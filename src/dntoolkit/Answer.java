@@ -4,80 +4,64 @@ import graph.Node;
 import graph.Topology;
 import graphics.ThreadedUniverse;
 
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 import sort.Layers;
 import sort.SenderReceiverPairs;
 
-@SuppressWarnings("serial")
-public class Answer extends JPanel {
+public class Answer  {
 
 	public String trace;
 	private DnToolKit kit;
-	JLabel label;
-	JButton vis ;
-	JButton show ;
 	String [] nodes,links;
 
-	private void  AddListeners() {
-		show.addActionListener( new ActionListener() {
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				kit.analize.showAns.setText(trace);
-			}
-		});
 
-		vis.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-
-				String nodesStr = JTreeMethods.visitSimpleTree(kit.eastPanel.nodeTree);
-				nodes= nodesStr.substring(1).split("\n");
-
-				String[] traceTokens  = trace.split("\n");
-				String trace2 ="";
-
-				String linkStr = JTreeMethods.visitSimpleTree(kit.eastPanel.linkTree);
-				links= linkStr.substring(1).split("\n");
-				
-				for(int i = 0; i < traceTokens.length; i++) {
-					String tmp = traceTokens[i];
-					StringTokenizer tokens2 = new StringTokenizer(tmp,"(");
-
-					if(tokens2.nextToken().contains("receive"))
-						trace2 += substitude(tmp,0);
-					else
-						trace2 += substitude(tmp,1);
-				}
-				
-				Layers layers = new Layers(trace2);
-
-				List<List<Node>> levels = layers.layers; 
-				Vector<SenderReceiverPairs> messages = layers.messages; 
-				
-				
-				String tmp = JTreeMethods.visitSimpleTree2(kit.westPanel.perTree,"persistent");
-				String[] persistentPredicates = tmp.split(" "); 
-				
-				String[] transportPredicates = (JTreeMethods.visitSimpleTree2(kit.westPanel.tranTree,"transport")).split(" "); 
-				
-				new Thread(new  ThreadedUniverse(levels,messages,(new Topology(new Layers(getDummyTrace(links)).messages)).getTopology(),
-						nodes.length,persistentPredicates,null,transportPredicates,trace2,nodes)).start();
-			}
-		});
+	public void show() {
+		kit.analize.showAns.setText(trace);
 	}
-	
-	
+
+
+	public void visualize() {
+
+		String nodesStr = JTreeMethods.visitSimpleTree(kit.eastPanel.nodeTree);
+		nodes= nodesStr.substring(1).split("\n");
+
+		String[] traceTokens  = trace.split("\n");
+		String trace2 ="";
+
+		String linkStr = JTreeMethods.visitSimpleTree(kit.eastPanel.linkTree);
+		links= linkStr.substring(1).split("\n");
+
+		for(int i = 0; i < traceTokens.length; i++) {
+			String tmp = traceTokens[i];
+			StringTokenizer tokens2 = new StringTokenizer(tmp,"(");
+
+			if(tokens2.nextToken().contains("receive"))
+				trace2 += substitude(tmp,0);
+			else
+				trace2 += substitude(tmp,1);
+		}
+
+		Layers layers = new Layers(trace2);
+
+		List<List<Node>> levels = layers.layers; 
+		Vector<SenderReceiverPairs> messages = layers.messages; 
+
+
+		String tmp = JTreeMethods.visitSimpleTree2(kit.westPanel.perTree,"persistent");
+		String[] persistentPredicates = tmp.split(" "); 
+
+		String[] transportPredicates = (JTreeMethods.visitSimpleTree2(kit.westPanel.tranTree,"transport")).split(" "); 
+
+		new Thread(new  ThreadedUniverse(levels,messages,(new Topology(new Layers(getDummyTrace(links)).messages)).getTopology(),
+				nodes.length,persistentPredicates,null,transportPredicates,trace2,nodes)).start();
+	}
+
+
+
 	private String getDummyTrace(String[] links) {
 		String output="";
 		for(int i =0; i < links.length ; i++) {
@@ -90,7 +74,7 @@ public class Answer extends JPanel {
 		}
 		return output;
 	}
-	
+
 	private String substitude(String line,int flag) {
 		StringTokenizer tokens = new StringTokenizer(line,"(");
 		String head = tokens.nextToken();
@@ -112,7 +96,7 @@ public class Answer extends JPanel {
 
 		return head + "("+ total + ")\n"; 
 	}
-	
+
 	private int findIndex( String target) {
 		for(int i =0; i < nodes.length; i++){
 			if(nodes[i].equals(target))
@@ -120,18 +104,10 @@ public class Answer extends JPanel {
 		}
 		return -1;
 	}
-	
+
 	public Answer(String trace, DnToolKit kit, int sol){
 		this.trace = trace.substring(0,trace.length()-1);
 		this.kit = kit;
-		label = new JLabel("Answer: " + sol);
-		vis = new JButton("visualize " + sol);
-		show = new JButton("show " + sol);
-		setLayout(new FlowLayout());
-		add(label);
-		add(show);
-		add(vis);
-		AddListeners();
 	}
 
 }

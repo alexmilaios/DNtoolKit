@@ -157,7 +157,6 @@ public class Model {
 					Node sender = senderItr.next();
 					int senderlevel = getSenderLevel(sender);
 					int senderId =  sender.pair.getNode();
-					//int senderId = (sender.pair.getNode() == 0) ? numOfNodes : sender.pair.getNode()-1;
 					Vector3f start = layers.get(senderlevel).get(senderId);
 					
 					pointForDraw [senderlevel] [senderId] = true;

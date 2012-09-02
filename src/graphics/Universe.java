@@ -28,8 +28,6 @@ import javax.swing.JPanel;
 
 import sort.SenderReceiverPairs;
 
-import com.jogamp.opengl.util.Animator;
-
 
 public class Universe extends JFrame implements KeyListener, MouseListener{
 	
@@ -59,6 +57,8 @@ public class Universe extends JFrame implements KeyListener, MouseListener{
 				String [] transientPredicates, String [] transportPredicates,String trace, String [] nodes) {
 		setSize(870, 700);
 		setTitle("Visualization");
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		
 		
 		model = new Model(levels.size(), numOfNodes, connections,levels,messages,persistenPredicates,
 				transientPredicates,transportPredicates,trace,nodes);
@@ -74,9 +74,6 @@ public class Universe extends JFrame implements KeyListener, MouseListener{
 		screen_x = screen_y = 0;
 		
 		mouseClicked = false;
-		
-		Animator animator = new Animator(canvas);
-		animator.start();
 		
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add("Center",canvas);
@@ -102,6 +99,7 @@ public class Universe extends JFrame implements KeyListener, MouseListener{
 		label.setBackground(Color.black);
 		
 		getContentPane().add("South",label);
+		setVisible(true);
 	}
 	
 	
@@ -153,7 +151,6 @@ public class Universe extends JFrame implements KeyListener, MouseListener{
 				model.checkPosition(screen_x, screen_y ,model.getAreas(gl, glu));
 				mouseClicked =false;
 			}
-			
 		}
 
 		@Override
@@ -230,29 +227,35 @@ public class Universe extends JFrame implements KeyListener, MouseListener{
 		if(e.getKeyCode() == KeyEvent.VK_UP) { 
 			thita -= (float) (Math.PI / 14); 
 			thita %= 2*Math.PI;
+			canvas.repaint();
 		}
 		
 		if(e.getKeyCode() == KeyEvent.VK_DOWN) {
 			thita += (float) (Math.PI / 14);
 			thita %= 2*Math.PI;
+			canvas.repaint();
 		}
 		
 		if(e.getKeyCode() == KeyEvent.VK_LEFT) {
 			phi += (float) (Math.PI / 14);
 			phi %= 2*Math.PI;
+			canvas.repaint();
 		}
 		
 		if(e.getKeyCode() == KeyEvent.VK_RIGHT) {
 			phi -= (float) (Math.PI / 14);
 			phi %= 2*Math.PI;
+			canvas.repaint();
 		}
 		
 		if(e.getKeyCode() == KeyEvent.VK_I) {
-			radius -= (radius > 5.0f) ? 2.0f : 0.0f; 
+			radius -= (radius > 5.0f) ? 2.0f : 0.0f;
+			canvas.repaint();
 		}
 		
 		if(e.getKeyCode() == KeyEvent.VK_O) {
-			radius +=  2.0f; 
+			radius +=  2.0f;
+			canvas.repaint();
 		}
 	}
 
@@ -275,6 +278,7 @@ public class Universe extends JFrame implements KeyListener, MouseListener{
 		screen_x = e.getX();
 		screen_y = e.getY();
 		mouseClicked = true;
+		canvas.repaint();
 	}
 
 	@Override
@@ -299,10 +303,5 @@ public class Universe extends JFrame implements KeyListener, MouseListener{
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
-	}
-	
-	public void dispose() {
-		setVisible(false);
-		super.dispose();
 	}
 }

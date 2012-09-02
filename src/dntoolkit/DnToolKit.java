@@ -554,7 +554,7 @@ public class DnToolKit extends JFrame {
 	public DnToolKit() {
 		super("Declarative Networking ToolKit");
 		setSize(1500, 900);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setLocation(100, 100);
 
 		setLayout(new BorderLayout());
@@ -627,5 +627,4 @@ public class DnToolKit extends JFrame {
 	public static void main(String[] args) {
 		new DnToolKit();
 	}
-
 }
