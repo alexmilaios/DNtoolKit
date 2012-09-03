@@ -9,8 +9,10 @@ import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
+import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 @SuppressWarnings("serial")
 public class Querry extends JMenu {
@@ -18,7 +20,9 @@ public class Querry extends JMenu {
 	protected DnToolKit kit;
 
 	public Querry same;
-
+	
+	private File importedQuerry;
+	
 	public String definedQuerry = "";
 
 	private JMenu convergent = new JMenu("Convergent");
@@ -44,6 +48,8 @@ public class Querry extends JMenu {
 	private JMenuItem userSomeTimes = new JMenuItem("Sometimes");
 
 	private JMenuItem userNever = new JMenuItem("Never");
+
+	private JMenuItem loadQuerry = new JMenuItem("Load Querry");
 
 	public void addListeners() {
 		corAlways.addActionListener(new ActionListener() {
@@ -212,7 +218,7 @@ public class Querry extends JMenu {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				kit.qurryClicked = "Always";
-				new QuerryFrame(same,"always",kit);
+				new QuerryFrame(same,"always",kit,importedQuerry);
 			}
 		});
 
@@ -221,16 +227,28 @@ public class Querry extends JMenu {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				kit.qurryClicked = "SomeTimes";
-				new QuerryFrame(same,"sometimes",kit);
+				new QuerryFrame(same,"sometimes",kit,importedQuerry);
 			}
 		});
-		
+
 		userNever.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				kit.qurryClicked = "Never";
-				new QuerryFrame(same,"never",kit);
+				new QuerryFrame(same,"never",kit,importedQuerry);
+			}
+		});
+
+		loadQuerry.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser chooser = new JFileChooser();
+				FileNameExtensionFilter ft = new FileNameExtensionFilter("Text File", "txt");
+				chooser.addChoosableFileFilter(ft);
+				chooser.showOpenDialog(null);
+				importedQuerry = chooser.getSelectedFile();
 			}
 		});
 	}
@@ -256,6 +274,8 @@ public class Querry extends JMenu {
 		userDef.add(userNever);
 
 		add(userDef);
+
+		add(loadQuerry);
 
 	}
 }

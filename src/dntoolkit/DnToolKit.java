@@ -42,9 +42,9 @@ public class DnToolKit extends JFrame {
 	private static int numOfLowTabs = 0;
 
 	public String qurryClicked = null;
-	
+
 	public boolean manetFlag = false;
-	
+
 	/*
 	 * Main File
 	 */
@@ -80,7 +80,7 @@ public class DnToolKit extends JFrame {
 	 */
 	JMenu view = new JMenu("View");
 	JMenuItem showLow = new JMenuItem("Show Clingo Language");
-	JMenuItem removeLow = new JMenuItem("Delete Clingo Language");
+	JMenuItem removeLow = new JMenuItem("Close Clingo Language");
 
 	/*
 	 * Parse menu
@@ -99,6 +99,8 @@ public class DnToolKit extends JFrame {
 	 */
 	JMenu analisys = new JMenu("Analisys");
 	Analisys analize = new Analisys(this);
+	JMenuItem loadTrace = new JMenuItem("Load Trace File");
+
 
 	/*
 	 * Communication menu
@@ -153,6 +155,9 @@ public class DnToolKit extends JFrame {
 					clingo = new JTextArea(30,30);
 					clingo.setEditable(false);
 					String line,output="";
+					parser.doClick();
+					if(! (console.getText().equals("Parsing finished successfully")))
+						return;
 					try {
 						BufferedReader buffer = new BufferedReader(new InputStreamReader(new FileInputStream(new File("dn_files/output.lp")))); 
 						while((line = buffer.readLine()) != null) {
@@ -193,7 +198,7 @@ public class DnToolKit extends JFrame {
 					text = new JTextArea(30,30);
 					text.setEditable(true);
 					JScrollPane scroll = new JScrollPane(text);
-					
+
 					editpane.add(scroll);
 				}
 			}
@@ -260,9 +265,6 @@ public class DnToolKit extends JFrame {
 				if(mainFile == null){
 					save_as.doClick();
 				}else {
-					/*editorTabs.remove(0);
-					JScrollPane scroll = new JScrollPane(text);
-					editorTabs.addTab(mainFile.getName(), scroll);*/
 					try {
 						OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(mainFile));
 						out.write(JTreeMethods.visitTree(westPanel.perTree,"persistent"));
@@ -499,11 +501,11 @@ public class DnToolKit extends JFrame {
 						myParser.ReInit(new ByteArrayInputStream(line.getBytes()));
 						try {
 							Transport transport = (Transport) myParser.rule();
-							
+
 							if(transport.head.name.evaluate().equals("rrep") || 
 									transport.head.name.evaluate().equals("rreq"))
 								manetFlag = true;
-							
+
 							westPanel.namePredicate.setText(transport.head.name.evaluate());
 							westPanel.arrity.setText(transport.head.terms.size()+"");
 							westPanel.addTran.doClick();
@@ -593,31 +595,42 @@ public class DnToolKit extends JFrame {
 		menubar.add(query);
 
 		parse.add(parser);
-		menubar.add(parse);
+		//menubar.add(parse);
 
 		analisys.add(analize);
+
+		loadTrace.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				JFileChooser chooser = new JFileChooser();
+				FileNameExtensionFilter ft = new FileNameExtensionFilter("Text File", "txt");
+				chooser.addChoosableFileFilter(ft);
+				chooser.showOpenDialog(null);
+				File file = null;
+				if((file = chooser.getSelectedFile()) != null)
+					analize.loadTrace(file);
+			}
+		});
+
+		analisys.add(loadTrace);
+
 		menubar.add(analisys);
 
 		editpane.setLayout(new BoxLayout(editpane, BoxLayout.X_AXIS));
 		editorTabs.add("Editor",editpane);
 		centralPanel.add("Center",editorTabs);
 
-
 		add("North",menubar);
-
-
 		add("Center",centralPanel);
-
 		add("West", westPanel);
-
 		add("East",eastPanel);
 
 		console.setEditable(false);
 		JScrollPane consoleScroll = new JScrollPane(console);
 		downTap.add("cosole",consoleScroll);
-		
 		centralPanel.add("South",downTap);
-
+		
 		setVisible(true);
 	}
 

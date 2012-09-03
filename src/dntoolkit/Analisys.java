@@ -67,8 +67,8 @@ public class Analisys extends JMenuItem {
 		}
 	}
 
-	private void addAnswers() throws Exception {
-		BufferedReader buffer = new BufferedReader(new InputStreamReader(new FileInputStream(trace)));
+	private void addAnswers(File file) throws Exception {
+		BufferedReader buffer = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
 		String line;
 		int i = 1;
 
@@ -97,6 +97,11 @@ public class Analisys extends JMenuItem {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 
+
+				kit.parser.doClick();
+				if(! (kit.console.getText().equals("Parsing finished successfully")))
+					return;
+
 				final Thread runprocess = new Thread(new Runnable() {
 
 					@Override
@@ -106,7 +111,7 @@ public class Analisys extends JMenuItem {
 						answersMenu.removeAllItems();
 						showAns.setText("");
 						try {
-							addAnswers();
+							addAnswers(trace);
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -129,7 +134,11 @@ public class Analisys extends JMenuItem {
 						}
 						if(setOutput()){
 							kit.console.setText(kit.console.getText() + "\nThere number of answers: " + answers.size());
-							repaint();
+							reset();
+						}
+						if(answers.size() == 0){
+							general.removeAll();
+							kit.downTap.add("Visualization",general);
 						}
 					}
 				}).start();
@@ -157,6 +166,27 @@ public class Analisys extends JMenuItem {
 		});
 	}
 
+	public void loadTrace(File inputFile) {
+		answers = new ArrayList<Answer>();
+		answersMenu.removeAllItems();
+		showAns.setText("");
+		try {
+			addAnswers(inputFile);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if(setOutput()){
+			kit.console.setText(kit.console.getText() + "\nThere number of answers: " + answers.size());
+			reset();
+		}
+
+		if(answers.size() == 0){
+			general.removeAll();
+			kit.downTap.add("Visualization",general);
+		}
+	}
+
 	private boolean setOutput() {
 		if(kit.qurryClicked.equals("Always") || kit.qurryClicked.equals("Never") ) {
 			if(answers.size() > 0) {
@@ -180,8 +210,26 @@ public class Analisys extends JMenuItem {
 		return false;
 	}
 
+	private void reset() {
+		general.removeAll();
+		answerPane.setLayout(new BoxLayout(answerPane,BoxLayout.X_AXIS));
+		auxpane.setLayout(new FlowLayout());
+		auxpane.add(answersMenu);
+		auxpane.add(show);
+		auxpane.add(viz);
+		answerPane.add(auxpane);
+		answerPane.add(show);
+		answerPane.add(viz);
+		general.setLayout(new BoxLayout(general, BoxLayout.X_AXIS));
+		if(answersMenu.getItemCount() !=0)
+			general.add(new JScrollPane(answerPane));
+		showAns.setEditable(false);
+		general.add(new JScrollPane(showAns));
+		kit.downTap.add("Visualization",general);
+	}
+
 	public Analisys(DnToolKit kit){
-		super("Analize");
+		super("GO");
 		this.kit = kit;
 		this.addListener();
 		answerPane.setLayout(new BoxLayout(answerPane,BoxLayout.X_AXIS));
@@ -193,7 +241,8 @@ public class Analisys extends JMenuItem {
 		answerPane.add(show);
 		answerPane.add(viz);
 		general.setLayout(new BoxLayout(general, BoxLayout.X_AXIS));
-		general.add(new JScrollPane(answerPane));
+		if(answersMenu.getItemCount() !=0)
+			general.add(new JScrollPane(answerPane));
 		showAns.setEditable(false);
 		general.add(new JScrollPane(showAns));
 		kit.downTap.add("Visualization",general);

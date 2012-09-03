@@ -3,9 +3,12 @@ package dntoolkit;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
 import javax.swing.JButton;
@@ -26,6 +29,7 @@ public class QuerryFrame extends JFrame {
 	JLabel label = new JLabel("Define a predicate: ");
 	JTextField text = new JTextField(15);
 	JButton add = new JButton("Define");
+	File queery;
 
 	void addListener(){
 		add.addActionListener(new ActionListener() {
@@ -34,13 +38,21 @@ public class QuerryFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				String tmp = text.getText();
-				String result = "input " + tmp;
-				parent.kit.myParser.ReInit(new ByteArrayInputStream(result.getBytes()));
+				// String result = "input " + tmp;
+				parent.kit.myParser.ReInit(new ByteArrayInputStream(tmp.getBytes()));
 				try {
 					parent.kit.myParser.rule();
 
+					BufferedReader buffer = new BufferedReader(
+							new InputStreamReader(new FileInputStream(queery))); 
+
 					OutputStreamWriter out = new OutputStreamWriter(
 							new FileOutputStream(new File("dn_files/querry.lp")));
+					String line = "";
+					while((line = buffer.readLine()) != null) {
+						out.write(line + "\n");
+						out.flush();
+					}
 					if(type.equals("always"))
 						out.write(":- " + tmp);
 					else
@@ -59,11 +71,12 @@ public class QuerryFrame extends JFrame {
 		});
 	}
 
-	public QuerryFrame( Querry parent,String type, DnToolKit kit) {
+	public QuerryFrame( Querry parent,String type, DnToolKit kit, File querry) {
 		super("Define Predicate for a Querry");
 		setSize(400,100);
 		this.type = type;
 		this.kit = kit;
+		this.queery = querry;
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.parent = parent;
 		panel.setLayout(new FlowLayout());
