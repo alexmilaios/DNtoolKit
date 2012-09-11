@@ -43,7 +43,7 @@ public class Analisys extends JMenuItem {
 		OutputStreamWriter out;
 		try{
 			out = new OutputStreamWriter(new FileOutputStream(trace));
-			Process proc = Runtime.getRuntime().exec("./clingo 0 " + kit.com_model +  " dn_files/output.lp "+
+			Process proc = Runtime.getRuntime().exec("./clingo "+kit.eastPanel.numAnswers +" "+ kit.com_model +  " dn_files/output.lp "+
 					((kit.manetFlag) ? " dn_files/manet_injection.lp ":"")+ " dn_files/configuration.lp  dn_files/querry.lp");
 			InputStream in = proc.getInputStream();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(in));
@@ -75,7 +75,7 @@ public class Analisys extends JMenuItem {
 		while((line = buffer.readLine())!= null) {
 			if(!line.equals("")){
 				StringTokenizer tokens = new StringTokenizer(line," ");
-				if(tokens.nextToken().equals("Answer:")) {
+				if(tokens.nextToken().equals("Answer:") && (i <32000)) {
 					line = buffer.readLine();
 					StringTokenizer tokens2 = new StringTokenizer(line," ");
 					String trace = "";

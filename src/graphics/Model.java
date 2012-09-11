@@ -15,6 +15,8 @@ import javax.media.opengl.glu.GLU;
 import javax.media.opengl.glu.GLUquadric;
 import javax.vecmath.Vector3f;
 
+import com.jogamp.opengl.util.gl2.GLUT;
+
 import sort.Pair;
 import sort.SenderReceiverPairs;
 
@@ -61,13 +63,13 @@ public class Model {
 		float layer_y =  (float) (levels-1 -(levels-1)/2.0);
 		
 		// construction of the the points in the three dimension universe 
-		for(int i = 0; i < levels; i++) {
+		for(int i = 0; i < levels+1; i++) {
 			List<Vector3f> layer = new ArrayList<Vector3f>();
 			for(int j = 0; j < numOfNodes; j++) {
 				layer.add(new Vector3f(modelPoints.get(j).x, layer_y - i,modelPoints.get(j).z));
 			}
 			layers.add(layer);
-		}
+		}	
 	}
 	
 	public void drawPoints(GLU glu, GL2 gl) {
@@ -81,7 +83,8 @@ public class Model {
 		int i,j;
 		i = j = 0;
 		
-		for(List<Vector3f> layer : layers) {
+		for(int k = 0; k < layers.size()-1;k++) {
+			List<Vector3f>layer = layers.get(k);
 			for(Vector3f point : layer) {
 				if(pointForDraw[i][j] || i== 0 ){
 					if(i != 0)
@@ -100,9 +103,41 @@ public class Model {
 				}
 				j++;
 			}
-			j=0;
-			i++;
+			j=0; i++;
 		}
+	}
+	
+	public void drawPoints2(GLU glu, GL2 gl) {
+		
+		gl.glMatrixMode(GL2.GL_MODELVIEW);
+		gl.glLoadIdentity();
+		
+		GLUquadric quadric = glu.gluNewQuadric();
+		glu.gluQuadricNormals(quadric, GL.GL_TRUE);
+		
+		int i,j;
+		i = j = 0;
+		
+			List<Vector3f>layer = layers.get(0);
+			for(Vector3f point : layer) {
+				if(pointForDraw[i][j] || i== 0 ){
+					if(i != 0)
+						gl.glColor3f(1.0f,1.0f,1.0f);
+					else
+						gl.glColor3f(1.0f, 1.0f, 0f);
+					
+					gl.glLoadIdentity();
+					gl.glTranslatef(point.x, point.y, point.z);
+					glu.gluSphere(quadric,  (i==0) ? 0.11 : 0.07, 8, 8);
+				}else {
+					gl.glColor3f(0.4f,0.4f,0.4f);
+					gl.glLoadIdentity();
+					gl.glTranslatef(point.x, point.y, point.z);
+					glu.gluSphere(quadric, 0.07, 8, 8);
+				}
+				j++;
+			}
+			j=0; i++;
 	}
 	
 	public void drawGraph(GL2 gl) {
@@ -116,29 +151,43 @@ public class Model {
 	
 	public void drawTimeLines(GL2 gl) {
 		for(int i = 0; i < numOfNodes; i++) {
-			drawLine(gl,layers.get(0).get(i), layers.get(levels-1).get(i));
+			drawLine(gl,layers.get(0).get(i), layers.get(levels).get(i));
 		}
 	}
 	
-	public void drawGeneralTimeLines(GL2 gl) {
-		Vector3f start = new Vector3f(-10,layers.get(0).get(0).y+2,0);
-		Vector3f end = new Vector3f(-10,layers.get(levels-1).get(0).y-2,0);
-		drawLine(gl, start, end);
+	public void drawPyramids(GL2 gl) {
 		
-		gl.glMatrixMode(GL2.GL_MODELVIEW);
+		List<Vector3f> tmp = layers.get(layers.size()-1);
+		
+		for(int i=0; i < numOfNodes; i++) {
+			gl.glMatrixMode(GL2.GL_MODELVIEW);
+			gl.glLoadIdentity();
+			Vector3f tmpVec = tmp.get(i);
+			gl.glTranslatef(tmpVec.x,tmpVec.y,tmpVec.z);
+			gl.glScalef(0.2f, 0.2f, 0.2f);
+			
+			gl.glBegin(GL.GL_TRIANGLE_FAN);
+			gl.glVertex3f(0, -1, 0);
+			gl.glVertex3f(1, 0, 0);
+			gl.glVertex3f(0, 0, -1);
+			gl.glVertex3f(-1, 0, 0);
+			gl.glVertex3f(0, 0, 1);
+			gl.glVertex3f(1, 0, 0);
+			gl.glEnd();
+		}
+		
 		gl.glLoadIdentity();
-		gl.glTranslatef(-10, layers.get(levels-1).get(0).y-2, 0);
-		gl.glScalef(0.2f, 0.2f, 0.2f);
-		
-		gl.glBegin(GL.GL_TRIANGLE_FAN);
-		gl.glVertex3f(0, -1, 0);
-		gl.glVertex3f(1, 0, 0);
-		gl.glVertex3f(0, 0, -1);
-		gl.glVertex3f(-1, 0, 0);
-		gl.glVertex3f(0, 0, 1);
-		gl.glVertex3f(1, 0, 0);
-		gl.glEnd();
-		
+	}
+	
+	public void drawLabels(GL2 gl, GLUT glut){
+		gl.glColor3f(1.0f, 1.0f, 0f);
+		for(int i =0 ; i <numOfNodes; i++){
+			Vector3f tmpVec = layers.get(0).get(i);
+			gl.glMatrixMode(GL2.GL_MODELVIEW);
+			gl.glLoadIdentity();
+			gl.glRasterPos3f(tmpVec.x+0.2f, tmpVec.y+0.2f, tmpVec.z);
+			glut.glutBitmapString(GLUT.BITMAP_9_BY_15, nodes[i]);
+		}
 		gl.glLoadIdentity();
 	}
 	

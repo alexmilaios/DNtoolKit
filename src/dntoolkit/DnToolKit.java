@@ -17,14 +17,17 @@ import java.util.StringTokenizer;
 import javax.swing.BoxLayout;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.text.Position;
 import javax.swing.tree.TreeNode;
 
 import parser.ParseException;
@@ -97,7 +100,7 @@ public class DnToolKit extends JFrame {
 	/*
 	 * Analysis menu
 	 */
-	JMenu analisys = new JMenu("Analisys");
+	JMenu analisys = new JMenu("Analysis");
 	Analisys analize = new Analisys(this);
 	JMenuItem loadTrace = new JMenuItem("Load Trace File");
 
@@ -106,8 +109,8 @@ public class DnToolKit extends JFrame {
 	 * Communication menu
 	 */
 	JMenu communiation = new JMenu("Communication Model");
-	JMenuItem synch = new JMenuItem("Synchronous");
-	JMenuItem asynch = new JMenuItem("Asynchronous");
+	JRadioButtonMenuItem synch = new JRadioButtonMenuItem("Synchronous");
+	JRadioButtonMenuItem asynch = new JRadioButtonMenuItem("Asynchronous");
 	String com_model = "dn_files/synchronous.lp";
 
 	/*
@@ -167,8 +170,13 @@ public class DnToolKit extends JFrame {
 						ex.printStackTrace();
 					}
 					clingo.setText(output);
+					JPanel auxpane = new JPanel();
+					JLabel header = new JLabel("Low-level language");
+					auxpane.setLayout(new BorderLayout());		
 					JScrollPane scroll = new JScrollPane(clingo);
-					editpane.add(scroll);
+					auxpane.add("North",header);
+					auxpane.add("Center", scroll);
+					editpane.add(auxpane);
 					repaint();
 					numOfLowTabs++;
 				}
@@ -197,9 +205,13 @@ public class DnToolKit extends JFrame {
 				if(numOfEditTabs++ < 1){
 					text = new JTextArea(30,30);
 					text.setEditable(true);
+					JPanel auxpane = new JPanel();
+					JLabel header = new JLabel("High-level language");
+					auxpane.setLayout(new BorderLayout());		
 					JScrollPane scroll = new JScrollPane(text);
-
-					editpane.add(scroll);
+					auxpane.add("North",header);
+					auxpane.add("Center", scroll);
+					editpane.add(auxpane);
 				}
 			}
 		});
@@ -294,8 +306,9 @@ public class DnToolKit extends JFrame {
 				try {
 					OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(new File(confFileLP)));
 					out.write("#const maxtime = " + eastPanel.Maxtime + ".\n");
-					out.write("time(0..(" + (eastPanel.Maxtime -1) + ")).\n");
-					out.write("extended_time(0.." + eastPanel.Maxtime + ").");
+					out.write("time(0.." + (eastPanel.Maxtime -1) + ").\n");
+					out.write("extended_time(0.." + eastPanel.Maxtime + ").\n");
+					out.write("maxtime("+ (eastPanel.Maxtime - 1) +").");
 					out.write(JTreeMethods.visitNodeTree(eastPanel.nodeTree));
 					out.write(JTreeMethods.visitLinkTree(eastPanel.linkTree));
 					out.write(JTreeMethods.visitPerTree(eastPanel.initPerTree));
@@ -369,7 +382,7 @@ public class DnToolKit extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				JFileChooser chooser = new JFileChooser();
-				FileNameExtensionFilter ft = new FileNameExtensionFilter("Declarative Networking", "dn");
+				FileNameExtensionFilter ft = new FileNameExtensionFilter("Configuration File", "conf");
 				chooser.addChoosableFileFilter(ft);
 				chooser.showOpenDialog(null);
 				confFile = chooser.getSelectedFile();
@@ -425,6 +438,11 @@ public class DnToolKit extends JFrame {
 			}
 		}
 		buffer.close();
+		eastPanel.nodeTree.expandPath( eastPanel.nodeTree.getNextMatch("Nodes", 0, Position.Bias.Forward));
+		eastPanel.linkTree.expandPath(eastPanel.linkTree.getNextMatch("Links", 0, Position.Bias.Forward));
+		eastPanel.initPerTree.expandPath(eastPanel.initPerTree.getNextMatch("Initial Persistent Tuples", 0, Position.Bias.Forward));
+		eastPanel.initTranTree.expandPath(eastPanel.initTranTree.getNextMatch("Initial Transport Tuples", 0, Position.Bias.Forward));
+		eastPanel.initInTree.expandPath(eastPanel.initInTree.getNextMatch("Initial Input Tuples", 0, Position.Bias.Forward));
 	}
 
 	private void addListenerOnParser() {
@@ -472,6 +490,7 @@ public class DnToolKit extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				com_model = "dn_files/asynchronous.lp";
 				console.setText("Asynchronous");
+				synch.setSelected(false);
 			}
 		});
 
@@ -481,6 +500,7 @@ public class DnToolKit extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				com_model = "dn_files/synchronous.lp";
 				console.setText("Synchronous");
+				asynch.setSelected(false);
 			}
 		});
 	}
@@ -546,8 +566,13 @@ public class DnToolKit extends JFrame {
 			e.printStackTrace();
 		}
 		text.setText(output);
+		JPanel auxpane = new JPanel();
+		JLabel header = new JLabel("High-level language");
+		auxpane.setLayout(new BorderLayout());		
 		JScrollPane scroll = new JScrollPane(text);
-		editpane.add(scroll);
+		auxpane.add("North",header);
+		auxpane.add("Center", scroll);
+		editpane.add(auxpane);
 
 		repaint();
 	}
@@ -628,7 +653,7 @@ public class DnToolKit extends JFrame {
 
 		console.setEditable(false);
 		JScrollPane consoleScroll = new JScrollPane(console);
-		downTap.add("cosole",consoleScroll);
+		downTap.add("console",consoleScroll);
 		centralPanel.add("South",downTap);
 		
 		setVisible(true);

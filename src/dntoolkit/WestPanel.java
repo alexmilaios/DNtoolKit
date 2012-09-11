@@ -112,6 +112,7 @@ public class WestPanel extends JPanel {
 
 				model.insertNodeInto(newNode, node, node.getChildCount());
 				
+				perTree.expandPath(path);
 				namePredicate.setText("");
 				arrity.setText("");
 				repaint();
@@ -167,6 +168,8 @@ public class WestPanel extends JPanel {
 
 				model.insertNodeInto(newNode, node, node.getChildCount());
 
+				tranTree.expandPath(path);
+				
 				namePredicate.setText("");
 				arrity.setText("");
 				repaint();
@@ -213,6 +216,8 @@ public class WestPanel extends JPanel {
 
 				model.insertNodeInto(newNode, node, node.getChildCount());
 
+				inTree.expandPath(path);
+				
 				namePredicate.setText("");
 				arrity.setText("");
 				repaint();

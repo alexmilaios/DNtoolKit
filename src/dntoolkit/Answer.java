@@ -56,11 +56,11 @@ public class Answer  {
 
 		String[] transportPredicates = (JTreeMethods.visitSimpleTree2(kit.westPanel.tranTree,"transport")).split(" "); 
 
+		int depth = (kit.eastPanel.Maxtime+2 >= levels.size()) ? kit.eastPanel.Maxtime+2 : levels.size();
+		
 		new Thread(new  ThreadedUniverse(levels,messages,(new Topology(new Layers(getDummyTrace(links)).messages)).getTopology(),
-				nodes.length,persistentPredicates,null,transportPredicates,trace2,nodes)).start();
+				nodes.length,persistentPredicates,null,transportPredicates,trace2,nodes,depth)).start();
 	}
-
-
 
 	private String getDummyTrace(String[] links) {
 		String output="";

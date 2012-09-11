@@ -160,9 +160,17 @@ public class EastPanel extends JPanel {
 	JPanel fieldPanel = new JPanel();
 	JLabel timeLabel = new JLabel("MaxTime: ");
 	JTextField time = new JTextField(5);
-	public JButton setTime = new JButton("set");
+	public JButton setTime = new JButton("set Time");
 	public int Maxtime = -1; 
 	
+	/*
+	 * Answers Part
+	 */
+	JPanel answersPanel = new JPanel();
+	JLabel answersLabel = new JLabel("Number of Answers: ");
+	JTextField answers = new JTextField(5);
+	public JButton setAnswers = new JButton("set Answers");
+	public int numAnswers = 0; 
 	
 	
 	private void addTrees() {
@@ -274,7 +282,13 @@ public class EastPanel extends JPanel {
 		fieldPanel.add(setTime);
 		maxTime.add(fieldPanel);
 		
-		initTupples.add("MaxTime", maxTime);
+		answersPanel.add(answersLabel);
+		answersPanel.add(answers);
+		answersPanel.add(setAnswers);
+		
+		maxTime.add(answersPanel);
+		
+		initTupples.add("Values", maxTime);
 		
 		add(initTupples);
 	}
@@ -319,6 +333,7 @@ public class EastPanel extends JPanel {
 				MutableTreeNode newNode = new DefaultMutableTreeNode(name);
 
 				model.insertNodeInto(newNode, node, node.getChildCount());
+				
 				nodeID.setText("");
 				src.addItem(name);
 				dest.addItem(name);
@@ -429,9 +444,7 @@ public class EastPanel extends JPanel {
 
 				DefaultTreeModel model = (DefaultTreeModel) initPerTree.getModel();
 
-				int startRow = 0;
-				String prefix = "Initial Persistent Tuples";
-				TreePath path = initPerTree.getNextMatch(prefix, startRow, Position.Bias.Forward);
+				TreePath path = initPerTree.getNextMatch("Initial Persistent Tuples", 0, Position.Bias.Forward);
 				MutableTreeNode node = (MutableTreeNode)path.getLastPathComponent();
 
 				MutableTreeNode newNode = new DefaultMutableTreeNode(tuple + " holds at " + inputNode);
@@ -479,9 +492,7 @@ public class EastPanel extends JPanel {
 
 				DefaultTreeModel model = (DefaultTreeModel) initTranTree.getModel();
 
-				int startRow = 0;
-				String prefix = "Initial Transport Tuples";
-				TreePath path = initTranTree.getNextMatch(prefix, startRow, Position.Bias.Forward);
+				TreePath path = initTranTree.getNextMatch("Initial Transport Tuples", 0, Position.Bias.Forward);
 				MutableTreeNode node = (MutableTreeNode)path.getLastPathComponent();
 
 				MutableTreeNode newNode = new DefaultMutableTreeNode(tuple + " is send over: " +inputLink);
@@ -528,9 +539,7 @@ public class EastPanel extends JPanel {
 
 				DefaultTreeModel model = (DefaultTreeModel) initInTree.getModel();
 
-				int startRow = 0;
-				String prefix = "Initial Input Tuples";
-				TreePath path = initInTree.getNextMatch(prefix, startRow, Position.Bias.Forward);
+				TreePath path = initInTree.getNextMatch("Initial Input Tuples", 0, Position.Bias.Forward);
 				MutableTreeNode node = (MutableTreeNode)path.getLastPathComponent();
 
 				MutableTreeNode newNode = new DefaultMutableTreeNode(tuple + " holds");
@@ -568,6 +577,21 @@ public class EastPanel extends JPanel {
 				}catch (Exception e) {
 					// TODO: handle exception
 				}
+			}
+		});
+		
+		setAnswers.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try{
+					numAnswers = Integer.parseInt(answers.getText());
+				}catch (Exception ex) {
+					numAnswers = 0;
+				}
+				if(numAnswers < 0)
+					numAnswers = 0;
+				console.setText("Number of Answers: " + numAnswers);
 			}
 		});
 	}

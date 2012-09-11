@@ -12,6 +12,7 @@ import java.io.OutputStreamWriter;
 import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 @SuppressWarnings("serial")
@@ -29,25 +30,25 @@ public class Querry extends JMenu {
 
 	private JMenu forLoop = new JMenu("Forwarding Loop");
 
-	private JMenuItem corAlways = new JMenuItem("Always");
+	private JRadioButtonMenuItem corAlways = new JRadioButtonMenuItem("Always");
 
-	private JMenuItem corSomeTimes = new JMenuItem("Sometimes");
+	private JRadioButtonMenuItem corSomeTimes = new JRadioButtonMenuItem("Sometimes");
 
-	private JMenuItem corNever = new JMenuItem("Never");
+	private JRadioButtonMenuItem corNever = new JRadioButtonMenuItem("Never");
 
-	private JMenuItem forAlways = new JMenuItem("Always");
+	private JRadioButtonMenuItem forAlways = new JRadioButtonMenuItem("Always");
 
-	private JMenuItem forSomeTimes = new JMenuItem("Sometimes");
+	private JRadioButtonMenuItem forSomeTimes = new JRadioButtonMenuItem("Sometimes");
 
-	private JMenuItem forNever = new JMenuItem("Never");
+	private JRadioButtonMenuItem forNever = new JRadioButtonMenuItem("Never");
 
 	private JMenu userDef = new JMenu("User Defined Predicate");
 
-	private JMenuItem userAlways = new JMenuItem("Always");
+	private JRadioButtonMenuItem userAlways = new JRadioButtonMenuItem("Always");
 
-	private JMenuItem userSomeTimes = new JMenuItem("Sometimes");
+	private JRadioButtonMenuItem userSomeTimes = new JRadioButtonMenuItem("Sometimes");
 
-	private JMenuItem userNever = new JMenuItem("Never");
+	private JRadioButtonMenuItem userNever = new JRadioButtonMenuItem("Never");
 
 	private JMenuItem loadQuerry = new JMenuItem("Load Querry");
 
@@ -72,6 +73,14 @@ public class Querry extends JMenu {
 					out.write(JTreeMethods.visitSimpleShowTree(kit.westPanel.perTree,"persistent"));
 					out.write(JTreeMethods.visitSimpleShowTree(kit.westPanel.tranTree,"transport"));
 					out.flush();
+					corSomeTimes.setSelected(false);
+					corNever.setSelected(false);
+					forAlways.setSelected(false);
+					forSomeTimes.setSelected(false);
+					forNever.setSelected(false);
+					userAlways.setSelected(false);
+					userSomeTimes.setSelected(false);
+					userNever.setSelected(false);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -100,6 +109,14 @@ public class Querry extends JMenu {
 					out.write(JTreeMethods.visitSimpleShowTree(kit.westPanel.tranTree,"transport"));
 					out.close();
 					buffer.close();
+					corAlways.setSelected(false);
+					corNever.setSelected(false);
+					forAlways.setSelected(false);
+					forSomeTimes.setSelected(false);
+					forNever.setSelected(false);
+					userAlways.setSelected(false);
+					userSomeTimes.setSelected(false);
+					userNever.setSelected(false);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -125,6 +142,14 @@ public class Querry extends JMenu {
 					out.write(JTreeMethods.visitSimpleShowTree(kit.westPanel.perTree,"persistent"));
 					out.write(JTreeMethods.visitSimpleShowTree(kit.westPanel.tranTree,"transport"));
 					out.flush();
+					corAlways.setSelected(false);
+					corSomeTimes.setSelected(false);
+					forAlways.setSelected(false);
+					forSomeTimes.setSelected(false);
+					forNever.setSelected(false);
+					userAlways.setSelected(false);
+					userSomeTimes.setSelected(false);
+					userNever.setSelected(false);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -153,6 +178,14 @@ public class Querry extends JMenu {
 					out.write(JTreeMethods.visitSimpleShowTree(kit.westPanel.tranTree,"transport"));
 					out.close();
 					buffer.close();
+					forSomeTimes.setSelected(false);
+					forNever.setSelected(false);
+					corAlways.setSelected(false);
+					corSomeTimes.setSelected(false);
+					corNever.setSelected(false);
+					userAlways.setSelected(false);
+					userSomeTimes.setSelected(false);
+					userNever.setSelected(false);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -181,6 +214,14 @@ public class Querry extends JMenu {
 					out.write(JTreeMethods.visitSimpleShowTree(kit.westPanel.tranTree,"transport"));
 					out.close();
 					buffer.close();
+					forAlways.setSelected(false);
+					corNever.setSelected(false);
+					corAlways.setSelected(false);
+					corSomeTimes.setSelected(false);
+					corNever.setSelected(false);
+					userAlways.setSelected(false);
+					userSomeTimes.setSelected(false);
+					userNever.setSelected(false);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -206,7 +247,16 @@ public class Querry extends JMenu {
 					out.write("\n#hide.");
 					out.write(JTreeMethods.visitSimpleShowTree(kit.westPanel.perTree,"persistent"));
 					out.write(JTreeMethods.visitSimpleShowTree(kit.westPanel.tranTree,"transport"));
+					out.flush();
 					buffer.close();
+					forSomeTimes.setSelected(false);
+					forAlways.setSelected(false);
+					corAlways.setSelected(false);
+					corSomeTimes.setSelected(false);
+					corNever.setSelected(false);
+					userAlways.setSelected(false);
+					userSomeTimes.setSelected(false);
+					userNever.setSelected(false);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -219,6 +269,14 @@ public class Querry extends JMenu {
 			public void actionPerformed(ActionEvent e) {
 				kit.qurryClicked = "Always";
 				new QuerryFrame(same,"always",kit,importedQuerry);
+				userNever.setSelected(false);
+				userSomeTimes.setSelected(false);
+				corAlways.setSelected(false);
+				corSomeTimes.setSelected(false);
+				corNever.setSelected(false);
+				forAlways.setSelected(false);
+				forSomeTimes.setSelected(false);
+				forNever.setSelected(false);
 			}
 		});
 
@@ -228,6 +286,14 @@ public class Querry extends JMenu {
 			public void actionPerformed(ActionEvent e) {
 				kit.qurryClicked = "SomeTimes";
 				new QuerryFrame(same,"sometimes",kit,importedQuerry);
+				userAlways.setSelected(false);
+				userNever.setSelected(false);
+				corAlways.setSelected(false);
+				corSomeTimes.setSelected(false);
+				corNever.setSelected(false);
+				forAlways.setSelected(false);
+				forSomeTimes.setSelected(false);
+				forNever.setSelected(false);
 			}
 		});
 
@@ -237,6 +303,14 @@ public class Querry extends JMenu {
 			public void actionPerformed(ActionEvent e) {
 				kit.qurryClicked = "Never";
 				new QuerryFrame(same,"never",kit,importedQuerry);
+				userAlways.setSelected(false);
+				userSomeTimes.setSelected(false);
+				corAlways.setSelected(false);
+				corSomeTimes.setSelected(false);
+				corNever.setSelected(false);
+				forAlways.setSelected(false);
+				forSomeTimes.setSelected(false);
+				forNever.setSelected(false);
 			}
 		});
 

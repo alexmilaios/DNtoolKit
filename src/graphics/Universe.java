@@ -25,6 +25,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import com.jogamp.opengl.util.gl2.GLUT;
+
 
 import sort.SenderReceiverPairs;
 
@@ -54,14 +56,15 @@ public class Universe extends JFrame implements KeyListener, MouseListener{
 	
 	public Universe (List<List<Node>> levels, Vector<SenderReceiverPairs> messages, 
 				List<Connection> connections, int numOfNodes,String [] persistenPredicates, 
-				String [] transientPredicates, String [] transportPredicates,String trace, String [] nodes) {
+				String [] transientPredicates, String [] transportPredicates,String trace, String [] nodes,int Maxtime) {
 		setSize(870, 700);
 		setTitle("Visualization");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		
-		model = new Model(levels.size(), numOfNodes, connections,levels,messages,persistenPredicates,
+		model = new Model(Maxtime, numOfNodes, connections,levels,messages,persistenPredicates,
 				transientPredicates,transportPredicates,trace,nodes);
+		
 		
 		GraphicListener listener = new GraphicListener();
 		canvas = new GLCanvas(new GLCapabilities(null));
@@ -78,6 +81,7 @@ public class Universe extends JFrame implements KeyListener, MouseListener{
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add("Center",canvas);
 		
+		
 		JPanel label = new JPanel();
 		JLabel timeline = new JLabel(" Blue Lines: timeline ");
 		timeline.setForeground(Color.cyan);
@@ -90,6 +94,7 @@ public class Universe extends JFrame implements KeyListener, MouseListener{
 		JLabel moments = new JLabel(" White Spheres: Time Moments ");
 		moments.setForeground(Color.white);
 		
+		
 		label.setLayout(new BoxLayout(label, BoxLayout.X_AXIS));
 		label.add(timeline);
 		label.add(msg);
@@ -101,6 +106,7 @@ public class Universe extends JFrame implements KeyListener, MouseListener{
 		getContentPane().add("South",label);
 		setVisible(true);
 	}
+	
 	
 	
 	public class GraphicListener implements GLEventListener {
@@ -137,15 +143,17 @@ public class Universe extends JFrame implements KeyListener, MouseListener{
 			
 			// draw initial topology
 			model.drawGraph(gl);
+			model.drawLabels(gl, new GLUT());
 			
 			// draw vertical lines corresponding to time-line 
 			gl.glColor3f(0.0f, 0.0f, 1.0f);
 			model.drawTimeLines(gl);
-			model.drawGeneralTimeLines(gl);
+			model.drawPyramids(gl);
 			
 			// draw the exchange messages
 			gl.glColor3f(1.0f, 0.0f, 0.0f);
 			model.drawMessages(gl);
+			
 			
 			if(mouseClicked) {
 				model.checkPosition(screen_x, screen_y ,model.getAreas(gl, glu));

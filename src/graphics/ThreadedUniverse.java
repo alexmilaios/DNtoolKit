@@ -14,14 +14,14 @@ public class ThreadedUniverse implements Runnable{
 	List<List<Node>> levels;
 	Vector<SenderReceiverPairs> messages; 
 	List<Connection> connections;
-	int numOfNodes;
+	int numOfNodes,MaxTime;
 	String [] persistenPredicates, transientPredicates,transportPredicates,nodes; 
 	String trace;
 
 
 	public ThreadedUniverse(List<List<Node>> levels, Vector<SenderReceiverPairs> messages, 
 			List<Connection> connections, int numOfNodes,String [] persistenPredicates, 
-			String [] transientPredicates, String [] transportPredicates,String trace, String[] nodes){
+			String [] transientPredicates, String [] transportPredicates,String trace, String[] nodes,int Maxtime){
 
 		this.levels = levels;
 		this.messages  = messages;
@@ -32,12 +32,13 @@ public class ThreadedUniverse implements Runnable{
 		this.transportPredicates = transportPredicates;
 		this.trace = trace;
 		this.nodes = nodes;
+		this.MaxTime = Maxtime;
 	}
 
 	@Override
 	public void run() {
 		new Universe(levels, messages, connections, numOfNodes, 
-				persistenPredicates, transientPredicates, transportPredicates, trace,nodes);
+				persistenPredicates, transientPredicates, transportPredicates, trace,nodes,MaxTime);
 	}
 
 }
