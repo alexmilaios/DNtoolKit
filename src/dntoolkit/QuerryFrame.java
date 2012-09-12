@@ -62,6 +62,7 @@ public class QuerryFrame extends JFrame {
 					out.write(JTreeMethods.visitSimpleShowTree(kit.westPanel.perTree,"persistent"));
 					out.write(JTreeMethods.visitSimpleShowTree(kit.westPanel.tranTree,"transport"));
 					out.close();
+					parent.typeOfQuerry +=" "+tmp;
 				} catch (Exception ex) {
 					parent.kit.console.setText(ex.getMessage());
 				}

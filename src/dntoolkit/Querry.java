@@ -26,6 +26,8 @@ public class Querry extends JMenu {
 	private File importedQuerry;
 	
 	public String definedQuerry = "";
+	
+	public String typeOfQuerry="";
 
 	private JMenu convergent = new JMenu("Convergent");
 
@@ -59,6 +61,7 @@ public class Querry extends JMenu {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				kit.qurryClicked = "Always";
+				typeOfQuerry = "Always convergent";
 				try {
 					BufferedReader buffer = new BufferedReader(
 							new InputStreamReader(new FileInputStream(new File("dn_files/covergent.lp")))); 
@@ -93,6 +96,7 @@ public class Querry extends JMenu {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				kit.qurryClicked = "SomeTimes";
+				typeOfQuerry = "Somtimes convergent";
 				try {
 					BufferedReader buffer = new BufferedReader(
 							new InputStreamReader(new FileInputStream(new File("dn_files/covergent.lp")))); 
@@ -128,6 +132,7 @@ public class Querry extends JMenu {
 			@Override
 			public void actionPerformed(ActionEvent ev) {
 				kit.qurryClicked = "Never";
+				typeOfQuerry = "Never convergent";
 				try {
 					BufferedReader buffer = new BufferedReader(
 							new InputStreamReader(new FileInputStream(new File("dn_files/covergent.lp")))); 
@@ -162,6 +167,7 @@ public class Querry extends JMenu {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				kit.qurryClicked = "Always";
+				typeOfQuerry = "Always has_loop";
 				try {
 					BufferedReader buffer = new BufferedReader(
 							new InputStreamReader(new FileInputStream(new File("dn_files/for_loop.lp")))); 
@@ -198,6 +204,7 @@ public class Querry extends JMenu {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				kit.qurryClicked = "SomeTimes";
+				typeOfQuerry = "Sometimes has_loop";
 				try {
 					BufferedReader buffer = new BufferedReader(
 							new InputStreamReader(new FileInputStream(new File("dn_files/for_loop.lp")))); 
@@ -233,6 +240,7 @@ public class Querry extends JMenu {
 			@Override
 			public void actionPerformed(ActionEvent ev) {
 				kit.qurryClicked = "Never";
+				typeOfQuerry = "Never has_loop";
 				try {
 					BufferedReader buffer = new BufferedReader(
 							new InputStreamReader(new FileInputStream(new File("dn_files/for_loop.lp")))); 
@@ -269,6 +277,7 @@ public class Querry extends JMenu {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				kit.qurryClicked = "Always";
+				typeOfQuerry = "Always";
 				new QuerryFrame(same,"always",kit,importedQuerry);
 				userNever.setSelected(false);
 				userSomeTimes.setSelected(false);
@@ -286,6 +295,7 @@ public class Querry extends JMenu {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				kit.qurryClicked = "SomeTimes";
+				typeOfQuerry = "Sometimes";
 				new QuerryFrame(same,"sometimes",kit,importedQuerry);
 				userAlways.setSelected(false);
 				userNever.setSelected(false);
@@ -303,6 +313,7 @@ public class Querry extends JMenu {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				kit.qurryClicked = "Never";
+				typeOfQuerry = "Never";
 				new QuerryFrame(same,"never",kit,importedQuerry);
 				userAlways.setSelected(false);
 				userSomeTimes.setSelected(false);
@@ -336,6 +347,8 @@ public class Querry extends JMenu {
 						output += line + "\n";
 					}
 					text.setText(output);
+					if(kit.editorTabs.getTabCount() > 1)
+						kit.editorTabs.remove(1);
 					kit.editorTabs.add("Querry",text);
 				}catch (Exception ex) {
 					ex.printStackTrace();

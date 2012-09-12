@@ -1,7 +1,6 @@
 package dntoolkit;
 
 import java.awt.BorderLayout;
-import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -539,6 +538,7 @@ public class DnToolKit extends JFrame {
 	}
 
 	
+	@SuppressWarnings("rawtypes")
 	private void deleteLeafs(JTree tree, DefaultMutableTreeNode root){
 		DefaultTreeModel model = (DefaultTreeModel)tree.getModel();
 		List<TreePath> paths = new ArrayList<TreePath>(); 

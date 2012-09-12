@@ -190,20 +190,20 @@ public class Analisys extends JMenuItem {
 	private boolean setOutput() {
 		if(kit.qurryClicked.equals("Always") || kit.qurryClicked.equals("Never") ) {
 			if(answers.size() > 0) {
-				kit.console.setText("The query doesn't hold");
+				kit.console.setText("Query: \""+ kit.query.typeOfQuerry+"\" doesn't hold");
 				return true;
 			}else if (answers.size() == 0){
-				kit.console.setText("The query holds");
+				kit.console.setText("Query: \""+ kit.query.typeOfQuerry +"\" holds");
 				return false;
 			}
 		}
 
 		if(kit.qurryClicked.equals("SomeTimes")) {
 			if(answers.size() > 0) {
-				kit.console.setText("The query holds");
+				kit.console.setText("Query: \"" +kit.query.typeOfQuerry + "\" holds");
 				return true;
 			}else if (answers.size() == 0){
-				kit.console.setText("The query doesn't hold");
+				kit.console.setText("Query: \"" + kit.query.typeOfQuerry +"\" doesn't hold");
 				return false;
 			}
 		}
