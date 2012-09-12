@@ -88,15 +88,15 @@ public class Model {
 			for(Vector3f point : layer) {
 				if(pointForDraw[i][j] || i== 0 ){
 					if(i != 0)
-						gl.glColor3f(1.0f,1.0f,1.0f);
+						gl.glColor3f(0.0f,0.0f,0.0f);
 					else
-						gl.glColor3f(1.0f, 1.0f, 0f);
+						gl.glColor3f(0.85f, 0.85f, 0.0f);
 					
 					gl.glLoadIdentity();
 					gl.glTranslatef(point.x, point.y, point.z);
 					glu.gluSphere(quadric,  (i==0) ? 0.11 : 0.07, 8, 8);
 				}else {
-					gl.glColor3f(0.4f,0.4f,0.4f);
+					gl.glColor3f(0.6f,0.6f,0.6f);
 					gl.glLoadIdentity();
 					gl.glTranslatef(point.x, point.y, point.z);
 					glu.gluSphere(quadric, 0.07, 8, 8);
@@ -107,38 +107,7 @@ public class Model {
 		}
 	}
 	
-	public void drawPoints2(GLU glu, GL2 gl) {
-		
-		gl.glMatrixMode(GL2.GL_MODELVIEW);
-		gl.glLoadIdentity();
-		
-		GLUquadric quadric = glu.gluNewQuadric();
-		glu.gluQuadricNormals(quadric, GL.GL_TRUE);
-		
-		int i,j;
-		i = j = 0;
-		
-			List<Vector3f>layer = layers.get(0);
-			for(Vector3f point : layer) {
-				if(pointForDraw[i][j] || i== 0 ){
-					if(i != 0)
-						gl.glColor3f(1.0f,1.0f,1.0f);
-					else
-						gl.glColor3f(1.0f, 1.0f, 0f);
-					
-					gl.glLoadIdentity();
-					gl.glTranslatef(point.x, point.y, point.z);
-					glu.gluSphere(quadric,  (i==0) ? 0.11 : 0.07, 8, 8);
-				}else {
-					gl.glColor3f(0.4f,0.4f,0.4f);
-					gl.glLoadIdentity();
-					gl.glTranslatef(point.x, point.y, point.z);
-					glu.gluSphere(quadric, 0.07, 8, 8);
-				}
-				j++;
-			}
-			j=0; i++;
-	}
+	
 	
 	public void drawGraph(GL2 gl) {
 		ListIterator<Connection> litr = connections.listIterator();
@@ -180,7 +149,7 @@ public class Model {
 	}
 	
 	public void drawLabels(GL2 gl, GLUT glut){
-		gl.glColor3f(1.0f, 1.0f, 0f);
+		gl.glColor3f(0.85f, 0.85f, 0.0f);
 		for(int i =0 ; i <numOfNodes; i++){
 			Vector3f tmpVec = layers.get(0).get(i);
 			gl.glMatrixMode(GL2.GL_MODELVIEW);

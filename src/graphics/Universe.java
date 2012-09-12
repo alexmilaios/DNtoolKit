@@ -84,26 +84,28 @@ public class Universe extends JFrame implements KeyListener, MouseListener{
 		
 		JPanel label = new JPanel();
 		JLabel timeline = new JLabel(" Blue Lines: timeline ");
-		timeline.setForeground(Color.cyan);
+		timeline.setForeground(Color.blue);
 		JLabel msg = new JLabel(" Red Lines: messages ");
 		msg.setForeground(Color.red);
 		JLabel topo = new JLabel(" Green Lines: Topology ");
 		topo.setForeground(Color.green);
-		JLabel nodesLabel = new JLabel(" Yellow Spheres: Nodes ");
-		nodesLabel.setForeground(Color.yellow);
-		JLabel moments = new JLabel(" White Spheres: Time Moments ");
-		moments.setForeground(Color.white);
+		JLabel nodeslabel = new JLabel(" Yellow Spheres: Nodes ");
+		nodeslabel.setForeground(Color.yellow);
+		JLabel moments = new JLabel(" Black Spheres: Time Point ");
+		moments.setForeground(Color.black);
 		
-		
-		label.setLayout(new BoxLayout(label, BoxLayout.X_AXIS));
+		label.setLayout(new BoxLayout(label, BoxLayout.Y_AXIS));
 		label.add(timeline);
 		label.add(msg);
 		label.add(topo);
-		label.add(nodesLabel);
+		label.add(nodeslabel);
 		label.add(moments);
-		label.setBackground(Color.black);
+		label.setBackground(new Color(0.95f, 0.95f, 0.95f));
 		
-		getContentPane().add("South",label);
+		Topology topoPanel = new Topology(numOfNodes, connections,nodes);
+		label.add(topoPanel);
+		
+		getContentPane().add("East",label);
 		setVisible(true);
 	}
 	
@@ -116,6 +118,7 @@ public class Universe extends JFrame implements KeyListener, MouseListener{
 			// Clear image
 			GL2 gl = (GL2) drawable.getGL();
 			gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+			gl.glClearColor(0.95f, 0.95f, 0.95f, 0.95f);
 			
 			// gl settings
 			gl.glEnable(GL.GL_DEPTH_TEST); 

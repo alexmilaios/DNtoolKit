@@ -1,6 +1,7 @@
 package dntoolkit;
 
 import java.awt.BorderLayout;
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -12,7 +13,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
+import java.util.Enumeration;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFileChooser;
@@ -26,9 +30,14 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
+import javax.swing.JTree;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.Position;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
 
 import parser.ParseException;
 import parser.Parser;
@@ -121,6 +130,7 @@ public class DnToolKit extends JFrame {
 	JMenuItem saveAsConf = new JMenuItem("Save as Configuation");
 	JMenuItem saveConf = new JMenuItem("Save Configuation");
 	JMenuItem loadConf = new JMenuItem("Load Configuation");
+	JMenuItem delConf = new JMenuItem("Delete Configuation");
 	/*
 	 * Editors Tabs
 	 */
@@ -229,11 +239,19 @@ public class DnToolKit extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(numOfEditTabs == 1) {
-					editpane.remove(0);
-					repaint();
+					editpane.removeAll();
+					if(editorTabs.getTabCount()>1)
+						editorTabs.remove(1);
+					deleteLeafs(westPanel.perTree, westPanel.perRoot);
+					deleteLeafs(westPanel.tranTree, westPanel.tranRoot);
+					deleteLeafs(westPanel.inTree, westPanel.inRoot);
 					numOfEditTabs--;
+					if(numOfLowTabs == 1)
+						numOfLowTabs--;
+					repaint();
 				}
 			}
+			
 		});
 
 		loadFile.addActionListener(new ActionListener() {
@@ -285,14 +303,12 @@ public class DnToolKit extends JFrame {
 						out.write(text.getText());
 						out.flush();
 					} catch (Exception e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 				}
 			}
 		});
 	}
-
 
 	private void addListenersOnConf() {
 		add_Conf.addActionListener(new ActionListener() {
@@ -393,6 +409,23 @@ public class DnToolKit extends JFrame {
 						e.printStackTrace();
 					}
 				}
+			}
+		});
+		
+		delConf.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				deleteLeafs(eastPanel.nodeTree, eastPanel.nodeRoot);
+				eastPanel.src.removeAllItems();
+				eastPanel.dest.removeAllItems();
+				eastPanel.nodePer.removeAllItems();
+				deleteLeafs(eastPanel.linkTree, eastPanel.linkRoot);
+				eastPanel.linkTran.removeAllItems();
+				deleteLeafs(eastPanel.initPerTree, eastPanel.initPerRoot);
+				deleteLeafs(eastPanel.initTranTree, eastPanel.initTranRoot);
+				deleteLeafs(eastPanel.initInTree, eastPanel.initInRoot);
+				repaint();
 			}
 		});
 	}
@@ -505,6 +538,21 @@ public class DnToolKit extends JFrame {
 		});
 	}
 
+	
+	private void deleteLeafs(JTree tree, DefaultMutableTreeNode root){
+		DefaultTreeModel model = (DefaultTreeModel)tree.getModel();
+		List<TreePath> paths = new ArrayList<TreePath>(); 
+		for(Enumeration enu = root.children(); enu.hasMoreElements();) {
+			paths.add(tree.getNextMatch(enu.nextElement().toString(), 0, Position.Bias.Forward));
+			
+		}
+		for(TreePath path : paths){
+			MutableTreeNode node = (MutableTreeNode)path.getLastPathComponent();
+			model.removeNodeFromParent(node);
+		}
+		repaint();
+	}
+	
 	@SuppressWarnings("static-access")
 	private void populateFields(File file) {
 		text = new JTextArea(30,30);
@@ -577,7 +625,7 @@ public class DnToolKit extends JFrame {
 		repaint();
 	}
 
-
+	
 	public DnToolKit() {
 		super("Declarative Networking ToolKit");
 		setSize(1500, 900);
@@ -615,6 +663,7 @@ public class DnToolKit extends JFrame {
 		configuaration.add(loadConf);
 		configuaration.add(saveAsConf);
 		configuaration.add(saveConf);
+		configuaration.add(delConf);
 		menubar.add(configuaration);
 
 		menubar.add(query);
@@ -644,6 +693,7 @@ public class DnToolKit extends JFrame {
 
 		editpane.setLayout(new BoxLayout(editpane, BoxLayout.X_AXIS));
 		editorTabs.add("Editor",editpane);
+		
 		centralPanel.add("Center",editorTabs);
 
 		add("North",menubar);

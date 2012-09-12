@@ -2,6 +2,7 @@ package graphics;
 
 import graph.Node;
 
+import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,13 +13,18 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 import sort.LineReader;
 import sort.Pair;
@@ -69,34 +75,46 @@ public class NodeWindow implements Runnable {
 	class Window extends JFrame implements ActionListener{
 		
 		JButton search = new JButton("Search");
-		String [] types = {"persistent", "transient", "transport"};
-		JComboBox typeOfTuple =  new JComboBox();
-		JTextArea outputPredicates = new JTextArea(20,30);
+		JRadioButton persisten = new JRadioButton("persistent");
+		JRadioButton transien = new JRadioButton("transient");
+		JRadioButton transport = new JRadioButton("transport");
+		ButtonGroup group = new ButtonGroup();
+		JTextArea outputPredicates = new JTextArea(10,10);
+		JTextField predicateName = new JTextField(10);
 		
 		public Window() {
 			
-			super("Predicates for node (" + nodes[point.node.pair.getNode()] + 
-					"," + point.node.pair.getTime() + ")"+" global " + 
-					"(" + nodes[pointId.getNode()] + "," + (pointId.getTime())   + ") local");
+			super("Predicates for node " + nodes[point.node.pair.getNode()] + 
+					" at time " + point.node.pair.getTime() );
 			
-			setSize(400,400);
+			setSize(400,300);
 			setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			JPanel panel = new JPanel();
 			JLabel typesLabel = new JLabel("Type of predicates: ");
 			panel.add(typesLabel);
-			for(int i = 0; i < types.length; i++) {
-				typeOfTuple.addItem(types[i]);
-			}
-			
+			persisten.setSelected(true);
+			group.add(persisten);
+			group.add(transien);
+			group.add(transport);
 			search.addActionListener(this);
-			FlowLayout flow = new FlowLayout();
-			setLayout(flow);
-			panel.add(typeOfTuple);
-			panel.add(search);
+			panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+			panel.add(persisten);
+			panel.add(transien);
+			panel.add(transport);
+			JPanel filter = new JPanel();
+			JLabel filterName = new JLabel("Name of predicate");
+			filter.setLayout(new FlowLayout());
+			panel.add(filterName);
+			filter.add(predicateName);
+			panel.add(filter);
 			outputPredicates.setEditable(false);
 			JScrollPane scroll = new JScrollPane(outputPredicates);
-			add(panel);
-			add(scroll);
+			setLayout(new BorderLayout());
+			add(panel, BorderLayout.WEST);
+			JPanel south = new JPanel();
+			south.setLayout(new FlowLayout());
+			add(south.add(search), BorderLayout.SOUTH);
+			add(scroll,BorderLayout.CENTER);
 			setVisible(true);
 		}
 		
@@ -128,27 +146,28 @@ public class NodeWindow implements Runnable {
 		}
 		
 		
-		private String getPredicates(String type) throws Exception {
+		private String getPredicates(String type, String name) throws Exception {
 			
 			BufferedReader in =  new BufferedReader(new InputStreamReader(new ByteArrayInputStream(trace.getBytes())));
 			String line = "",output = "";
 			while((line = in.readLine()) != null) {
 				StringTokenizer token = new StringTokenizer(line,"(");
-				if(type == "persistent" && isPersistent(token.nextToken())){
+				String testname = token.nextToken();
+				if(type == "persistent" && isPersistent(testname) && testname.equals(name)){
 					Pair tmp = LineReader.getReceiver(line);
 					tmp.setTime(tmp.getTime()-1);
 					if(pointId.equals(tmp)){
 						output += resubstitude(line, 1);
 					}
 				}
-				else if(type == "transient" && isTransient(token.nextToken())){
+				else if(type == "transient" && isTransient(testname) && testname.equals(name)){
 					Pair tmp = LineReader.getReceiver(line);
 					tmp.setTime(tmp.getTime()-1);
 					if(pointId.equals(tmp)){
 						output += line + "\n";
 					}
 				}
-				else if (type == "transport" && isTransport(token.nextToken())){
+				else if (type == "transport" && isTransport(testname) && testname.equals(name)){
 					Pair tmp = LineReader.getReceiver(line);
 					if(LineReader.isReceive(line)){
 						tmp.setTime(tmp.getTime());
@@ -192,12 +211,12 @@ public class NodeWindow implements Runnable {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			try{
-				if(typeOfTuple.getSelectedIndex() == 0) {	
-					outputPredicates.setText(getPredicates("persistent"));
-				} else if(typeOfTuple.getSelectedIndex() == 1) {
-					outputPredicates.setText(getPredicates("transient"));
+				if(persisten.isSelected()) {	
+					outputPredicates.setText(getPredicates("persistent",predicateName.getText()));
+				} else if(transien.isSelected()) {
+					outputPredicates.setText(getPredicates("transient",predicateName.getText()));
 				}else {
-					outputPredicates.setText(getPredicates("transport"));
+					outputPredicates.setText(getPredicates("transport",predicateName.getText()));
 				}
 				repaint();
 			}catch (Exception ex) {

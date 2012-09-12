@@ -220,6 +220,7 @@ public class JTreeMethods {
 	private static void deleteLinks(TreeNode node,int index, String target,JTree tree,List<TreePath> paths) {
 		if(index != 0) {
 			StringTokenizer tokens = new StringTokenizer(node.toString(),"(");
+			tokens.nextToken();
 			StringTokenizer tokens2 = new StringTokenizer(tokens.nextToken(),",");
 			String src = tokens2.nextToken();
 			String dest = tokens2.nextToken();
@@ -236,6 +237,7 @@ public class JTreeMethods {
 			}
 		}
 	}
+	
 	
 	public static String visitTranTree( JTree tree) {
 		String output = "";

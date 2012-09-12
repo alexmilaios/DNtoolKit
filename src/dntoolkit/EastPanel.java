@@ -358,7 +358,6 @@ public class EastPanel extends JPanel {
 					
 					JTreeMethods.visitDeleteLastElementTree(initPerTree, node.toString());
 					JTreeMethods.deleteLinksTree(linkTree, node.toString(), east);
-					
 					model.removeNodeFromParent(node);
 				}
 
@@ -589,9 +588,11 @@ public class EastPanel extends JPanel {
 				}catch (Exception ex) {
 					numAnswers = 0;
 				}
-				if(numAnswers < 0)
+				if(numAnswers <= 0){
 					numAnswers = 0;
-				console.setText("Number of Answers: " + numAnswers);
+					answers.setText("All");
+				}
+				console.setText("Number of Answers: " + ((numAnswers == 0) ? "All" : numAnswers));
 			}
 		});
 	}

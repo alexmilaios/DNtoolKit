@@ -13,6 +13,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JTextArea;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 @SuppressWarnings("serial")
@@ -323,6 +324,22 @@ public class Querry extends JMenu {
 				chooser.addChoosableFileFilter(ft);
 				chooser.showOpenDialog(null);
 				importedQuerry = chooser.getSelectedFile();
+				
+				JTextArea text = new JTextArea(30,30);
+				text.setEditable(false);
+				String line ="",output="";
+				
+				try {
+					BufferedReader buffer = new BufferedReader(new InputStreamReader(new FileInputStream(importedQuerry)));
+					
+					while((line = buffer.readLine()) != null) {
+						output += line + "\n";
+					}
+					text.setText(output);
+					kit.editorTabs.add("Querry",text);
+				}catch (Exception ex) {
+					ex.printStackTrace();
+				}
 			}
 		});
 	}
